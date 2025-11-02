@@ -1,0 +1,55 @@
+# Deep Research Agent - Requirements
+
+# Core dependencies
+python>=3.10
+
+# Claude Agent SDK (for production use)
+# Note: This is optional for the POC as we mock the tools
+# claude-agent-sdk>=0.1.0
+
+# Async support
+anyio>=4.0.0
+asyncio>=3.4.3
+
+# For future enhancements (uncomment as needed):
+
+# Web scraping and fetching
+# requests>=2.31.0
+# beautifulsoup4>=4.12.0
+# aiohttp>=3.9.0
+
+# NLP and text processing
+# spacy>=3.7.0
+# nltk>=3.8.0
+# transformers>=4.35.0
+
+# Document processing
+# pypdf2>=3.0.0
+# python-docx>=1.0.0
+
+# Data handling
+# pandas>=2.1.0
+# numpy>=1.26.0
+
+# Search API clients (choose based on your needs)
+# google-api-python-client>=2.100.0  # Google Search
+# duckduckgo-search>=4.0.0            # DuckDuckGo
+# arxiv>=2.0.0                        # Academic papers
+
+# Caching
+# redis>=5.0.0
+# diskcache>=5.6.0
+
+# Monitoring and logging
+# prometheus-client>=0.19.0
+# structlog>=24.0.0
+
+# Testing
+# pytest>=7.4.0
+# pytest-asyncio>=0.21.0
+# pytest-cov>=4.1.0
+
+# Development
+# black>=23.0.0
+# flake8>=6.1.0
+# mypy>=1.7.0
