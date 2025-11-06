@@ -63,6 +63,34 @@ zf-search git
 | `zf-search <keyword>` | `zfs` | Search functions by keyword (grep-based) |
 | `zf-add <name> <cat>` | `zfa` | Create a new function from template |
 | `zf-help` | `zfh` | Show detailed help information |
+| `zf-tv-setup` | - | Set up Television integration (optional) |
+
+## 📺 Television Integration (Optional)
+
+For an enhanced browsing experience, you can use [Television](https://github.com/alexpasmantier/television) - a modern, fast fuzzy finder with superior UI and built-in preview support.
+
+**Why Television?**
+- 🎨 Beautiful, modern interface with themes
+- 👀 Built-in syntax-highlighted previews (no configuration needed)
+- 📺 Browse by category with dedicated channels
+- ⚡ Fast, async performance
+
+**Quick Setup:**
+```zsh
+# Install television
+cargo install television
+# or: brew install television
+
+# Set up integration
+zf-tv-setup
+
+# Browse functions
+tv zsh-functions       # All functions
+tv git-functions       # Git functions only
+tv dev-functions       # Dev tools only
+```
+
+**Note:** Television is completely optional. The built-in `zf-browse` (fzf) works great and is more portable. Use Television if you want a premium experience. See `television/README.md` and `TELEVISION_INTEGRATION.md` for details.
 
 ## 🎨 Usage Examples
 
@@ -126,31 +154,38 @@ zf-add deploy-prod deployment
 
 ```
 zsh-functions/
-├── README.md              # This file
-├── init.zsh               # Main initialization script
-├── core/                  # Core management functions
-│   ├── zf-browse          # Interactive fzf browser
-│   ├── zf-list            # List functions
-│   ├── zf-search          # Keyword search
-│   ├── zf-add             # Create new functions
-│   └── zf-help            # Help system
-├── functions/             # User functions organized by category
-│   ├── git/              # Git and VCS helpers
+├── README.md                      # This file
+├── QUICKSTART.md                  # 5-minute quick start guide
+├── TELEVISION_INTEGRATION.md      # Television vs fzf analysis
+├── init.zsh                       # Main initialization script
+├── core/                          # Core management functions
+│   ├── zf-browse                  # Interactive fzf browser
+│   ├── zf-list                    # List functions
+│   ├── zf-search                  # Keyword search
+│   ├── zf-add                     # Create new functions
+│   ├── zf-help                    # Help system
+│   └── zf-tv-setup                # Television integration setup
+├── functions/                     # User functions organized by category
+│   ├── git/                       # Git and VCS helpers
 │   │   ├── git-quick-commit
 │   │   └── git-branch-clean
-│   ├── text/             # Text processing
+│   ├── text/                      # Text processing
 │   │   ├── extract-emails
 │   │   └── count-lines
-│   ├── file/             # File operations
+│   ├── file/                      # File operations
 │   │   ├── mkcd
 │   │   └── backup-file
-│   ├── dev/              # Development tools
+│   ├── dev/                       # Development tools
 │   │   ├── port-check
 │   │   └── json-pretty
-│   ├── docker/           # Container tools
-│   ├── system/           # System administration
-│   └── network/          # Network utilities
-└── templates/            # (Future: function templates)
+│   ├── docker/                    # Container tools
+│   ├── system/                    # System administration
+│   └── network/                   # Network utilities
+├── television/                    # Television fuzzy finder integration
+│   ├── README.md                  # Television setup guide
+│   └── zsh-functions-channels.toml # Channel configurations
+└── templates/                     # Function templates
+    └── function.template          # Base function template
 ```
 
 ## 🏷️ Function Format

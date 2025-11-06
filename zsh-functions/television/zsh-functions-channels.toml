@@ -1,0 +1,244 @@
+# ============================================================================
+# Television Cable Channels for ZSH Functions Library
+# ============================================================================
+#
+# Installation:
+#   1. Install television: cargo install television
+#   2. Copy this file to: ~/.config/television/cable/zsh-functions-channels.toml
+#   3. Set environment variable: export ZSH_FUNCTIONS_DIR=/path/to/zsh-functions
+#   4. Run: tv zsh-functions
+#
+# Or use the automated setup: zf-tv-setup
+# ============================================================================
+
+# All Functions Channel
+# Browse all functions across all categories
+[[cable_channel]]
+
+[metadata]
+name = "zsh-functions"
+description = "Browse all ZSH functions by name, category, description, or keywords"
+requirements = ["bat", "grep"]
+
+[source]
+command = '''
+if [ -z "$ZSH_FUNCTIONS_DIR" ]; then
+  echo "Error: ZSH_FUNCTIONS_DIR not set"
+  exit 1
+fi
+
+find "$ZSH_FUNCTIONS_DIR/functions" -type f 2>/dev/null | while read -r func_file; do
+  func_name=$(basename "$func_file")
+  category=$(basename "$(dirname "$func_file")")
+  description=$(grep "^# @description:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @description: *//')
+  keywords=$(grep "^# @keywords:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @keywords: *//')
+
+  # Format: name [category] description | keywords | path
+  printf "%-24s %-12s %-50s | %-30s | %s\n" \
+    "$func_name" \
+    "[$category]" \
+    "$description" \
+    "$keywords" \
+    "$func_file"
+done | sort
+'''
+
+[preview]
+command = '''
+# Extract the file path from the last field (after the last |)
+file_path=$(echo "{}" | awk -F'|' '{print $NF}' | sed 's/^[[:space:]]*//')
+
+if [ -f "$file_path" ]; then
+  # Show file with bat
+  bat --color=always --style=full --theme=base16 "$file_path"
+else
+  echo "File not found: $file_path"
+fi
+'''
+
+# ============================================================================
+
+# Git Functions Channel
+[[cable_channel]]
+
+[metadata]
+name = "git-functions"
+description = "Git and version control helper functions"
+requirements = ["bat"]
+
+[source]
+command = '''
+if [ -z "$ZSH_FUNCTIONS_DIR" ]; then
+  echo "Error: ZSH_FUNCTIONS_DIR not set"
+  exit 1
+fi
+
+find "$ZSH_FUNCTIONS_DIR/functions/git" -type f 2>/dev/null | while read -r func_file; do
+  func_name=$(basename "$func_file")
+  description=$(grep "^# @description:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @description: *//')
+  usage=$(grep "^# @usage:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @usage: *//')
+
+  printf "%-28s %-60s | %s\n" \
+    "$func_name" \
+    "$description" \
+    "$func_file"
+done | sort
+'''
+
+[preview]
+command = '''
+file_path=$(echo "{}" | awk -F'|' '{print $NF}' | sed 's/^[[:space:]]*//')
+if [ -f "$file_path" ]; then
+  bat --color=always --style=full --theme=base16 "$file_path"
+else
+  # Fallback: try to find by function name
+  func_name=$(echo "{}" | awk '{print $1}')
+  bat --color=always --style=full --theme=base16 "$ZSH_FUNCTIONS_DIR/functions/git/$func_name" 2>/dev/null || echo "Function not found"
+fi
+'''
+
+# ============================================================================
+
+# Text Processing Functions Channel
+[[cable_channel]]
+
+[metadata]
+name = "text-functions"
+description = "Text processing and manipulation utilities"
+requirements = ["bat"]
+
+[source]
+command = '''
+if [ -z "$ZSH_FUNCTIONS_DIR" ]; then
+  echo "Error: ZSH_FUNCTIONS_DIR not set"
+  exit 1
+fi
+
+find "$ZSH_FUNCTIONS_DIR/functions/text" -type f 2>/dev/null | while read -r func_file; do
+  func_name=$(basename "$func_file")
+  description=$(grep "^# @description:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @description: *//')
+
+  printf "%-28s %-60s | %s\n" \
+    "$func_name" \
+    "$description" \
+    "$func_file"
+done | sort
+'''
+
+[preview]
+command = '''
+file_path=$(echo "{}" | awk -F'|' '{print $NF}' | sed 's/^[[:space:]]*//')
+bat --color=always --style=full --theme=base16 "$file_path" 2>/dev/null
+'''
+
+# ============================================================================
+
+# File Operations Channel
+[[cable_channel]]
+
+[metadata]
+name = "file-functions"
+description = "File operations and management utilities"
+requirements = ["bat"]
+
+[source]
+command = '''
+if [ -z "$ZSH_FUNCTIONS_DIR" ]; then
+  echo "Error: ZSH_FUNCTIONS_DIR not set"
+  exit 1
+fi
+
+find "$ZSH_FUNCTIONS_DIR/functions/file" -type f 2>/dev/null | while read -r func_file; do
+  func_name=$(basename "$func_file")
+  description=$(grep "^# @description:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @description: *//')
+
+  printf "%-28s %-60s | %s\n" \
+    "$func_name" \
+    "$description" \
+    "$func_file"
+done | sort
+'''
+
+[preview]
+command = '''
+file_path=$(echo "{}" | awk -F'|' '{print $NF}' | sed 's/^[[:space:]]*//')
+bat --color=always --style=full --theme=base16 "$file_path" 2>/dev/null
+'''
+
+# ============================================================================
+
+# Development Tools Channel
+[[cable_channel]]
+
+[metadata]
+name = "dev-functions"
+description = "Development tools and utilities"
+requirements = ["bat"]
+
+[source]
+command = '''
+if [ -z "$ZSH_FUNCTIONS_DIR" ]; then
+  echo "Error: ZSH_FUNCTIONS_DIR not set"
+  exit 1
+fi
+
+find "$ZSH_FUNCTIONS_DIR/functions/dev" -type f 2>/dev/null | while read -r func_file; do
+  func_name=$(basename "$func_file")
+  description=$(grep "^# @description:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @description: *//')
+
+  printf "%-28s %-60s | %s\n" \
+    "$func_name" \
+    "$description" \
+    "$func_file"
+done | sort
+'''
+
+[preview]
+command = '''
+file_path=$(echo "{}" | awk -F'|' '{print $NF}' | sed 's/^[[:space:]]*//')
+bat --color=always --style=full --theme=base16 "$file_path" 2>/dev/null
+'''
+
+# ============================================================================
+
+# Quick Access - Recently Used Functions
+# (This would require tracking usage, shown here as a concept)
+[[cable_channel]]
+
+[metadata]
+name = "recent-functions"
+description = "Recently used ZSH functions"
+requirements = ["bat"]
+
+[source]
+command = '''
+# This is a conceptual example
+# In practice, you'd need to implement usage tracking
+# For now, just show all functions sorted by modification time
+
+if [ -z "$ZSH_FUNCTIONS_DIR" ]; then
+  echo "Error: ZSH_FUNCTIONS_DIR not set"
+  exit 1
+fi
+
+find "$ZSH_FUNCTIONS_DIR/functions" -type f 2>/dev/null -printf "%T@ %p\n" | \
+  sort -rn | \
+  head -20 | \
+  while read -r timestamp func_file; do
+    func_name=$(basename "$func_file")
+    category=$(basename "$(dirname "$func_file")")
+    description=$(grep "^# @description:" "$func_file" 2>/dev/null | head -1 | sed 's/^# @description: *//')
+
+    printf "%-24s %-12s %-50s | %s\n" \
+      "$func_name" \
+      "[$category]" \
+      "$description" \
+      "$func_file"
+  done
+'''
+
+[preview]
+command = '''
+file_path=$(echo "{}" | awk -F'|' '{print $NF}' | sed 's/^[[:space:]]*//')
+bat --color=always --style=full --theme=base16 "$file_path" 2>/dev/null
+'''

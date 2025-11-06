@@ -1,0 +1,145 @@
+#!/usr/bin/env zsh
+# @name: zf-tv-setup
+# @description: Set up Television integration for ZSH Functions Library
+# @category: core
+# @keywords: television, tv, setup, install, configure
+# @usage: zf-tv-setup [--force]
+# @example: zf-tv-setup
+
+zf-tv-setup() {
+  local force=0
+
+  # Parse arguments
+  if [[ "$1" == "--force" ]]; then
+    force=1
+  fi
+
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "Television Integration Setup for ZSH Functions Library"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+
+  # Check if television is installed
+  if ! command -v tv &> /dev/null; then
+    echo "❌ Television is not installed."
+    echo ""
+    echo "Install television using one of these methods:"
+    echo ""
+    echo "  📦 Via Cargo (Rust package manager):"
+    echo "     cargo install television"
+    echo ""
+    echo "  📥 Download pre-built binary:"
+    echo "     https://github.com/alexpasmantier/television/releases"
+    echo ""
+    echo "  🍺 Via Homebrew (macOS/Linux):"
+    echo "     brew install television"
+    echo ""
+    echo "After installation, run this command again."
+    return 1
+  fi
+
+  echo "✓ Television is installed: $(command -v tv)"
+  echo ""
+
+  # Check for ZSH_FUNCTIONS_DIR
+  if [[ -z "$ZSH_FUNCTIONS_DIR" ]]; then
+    echo "❌ ZSH_FUNCTIONS_DIR environment variable is not set."
+    echo ""
+    echo "This variable should be set in your ~/.zshrc by the init.zsh script."
+    echo "Make sure you've sourced the ZSH Functions Library properly."
+    return 1
+  fi
+
+  echo "✓ ZSH_FUNCTIONS_DIR is set: $ZSH_FUNCTIONS_DIR"
+  echo ""
+
+  # Determine television config directory
+  local tv_config_dir
+  if [[ -n "$XDG_CONFIG_HOME" ]]; then
+    tv_config_dir="$XDG_CONFIG_HOME/television"
+  else
+    tv_config_dir="$HOME/.config/television"
+  fi
+
+  local cable_dir="$tv_config_dir/cable"
+
+  # Create television config directory
+  if [[ ! -d "$cable_dir" ]]; then
+    echo "Creating television cable directory: $cable_dir"
+    mkdir -p "$cable_dir"
+  else
+    echo "✓ Television cable directory exists: $cable_dir"
+  fi
+  echo ""
+
+  # Copy channel configuration
+  local source_file="$ZSH_FUNCTIONS_DIR/television/zsh-functions-channels.toml"
+  local dest_file="$cable_dir/zsh-functions-channels.toml"
+
+  if [[ ! -f "$source_file" ]]; then
+    echo "❌ Channel configuration file not found: $source_file"
+    echo "Your ZSH Functions Library installation may be incomplete."
+    return 1
+  fi
+
+  if [[ -f "$dest_file" && $force -eq 0 ]]; then
+    echo "⚠️  Channel configuration already exists: $dest_file"
+    echo ""
+    echo "Options:"
+    echo "  1. Keep existing configuration (recommended if you've customized it)"
+    echo "  2. Overwrite with latest version from library"
+    echo ""
+    echo -n "Overwrite? [y/N] "
+    read -r response
+
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+      echo "Keeping existing configuration."
+    else
+      echo "Overwriting configuration..."
+      cp "$source_file" "$dest_file"
+      echo "✓ Configuration updated"
+    fi
+  else
+    echo "Installing channel configuration..."
+    cp "$source_file" "$dest_file"
+    echo "✓ Configuration installed: $dest_file"
+  fi
+
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "✨ Television integration is ready!"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "Available channels:"
+  echo "  • zsh-functions      - Browse all functions"
+  echo "  • git-functions      - Git and version control helpers"
+  echo "  • text-functions     - Text processing utilities"
+  echo "  • file-functions     - File operations"
+  echo "  • dev-functions      - Development tools"
+  echo "  • recent-functions   - Recently modified functions"
+  echo ""
+  echo "Usage examples:"
+  echo "  tv zsh-functions     # Browse all functions interactively"
+  echo "  tv git-functions     # Browse only git functions"
+  echo "  tv dev-functions     # Browse development tools"
+  echo ""
+  echo "Tip: You can also use the standard fzf-based browser:"
+  echo "  zf-browse            # Uses fzf (lighter, more portable)"
+  echo ""
+  echo "Both tools work great - choose based on your preference!"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+
+  # Optional: Check for bat (used in previews)
+  if ! command -v bat &> /dev/null; then
+    echo "💡 Optional: Install 'bat' for better syntax highlighting in previews:"
+    echo "   brew install bat  (macOS)"
+    echo "   apt install bat   (Ubuntu/Debian)"
+    echo ""
+  fi
+}
+
+# Execute if run directly
+if [[ "${(%):-%x}" == "${0}" ]]; then
+  zf-tv-setup "$@"
+fi

@@ -23,7 +23,7 @@ fpath=(
 )
 
 # Autoload core management functions
-autoload -Uz zf-browse zf-add zf-list zf-help zf-search
+autoload -Uz zf-browse zf-add zf-list zf-help zf-search zf-tv-setup
 
 # Autoload all user functions from category directories
 local func_file
