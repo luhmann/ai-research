@@ -1,0 +1,30 @@
+{
+  "newrelic": {
+    "api_key": "YOUR_NEW_RELIC_API_KEY",
+    "account_id": "YOUR_ACCOUNT_ID",
+    "nrql_query": "SELECT message, timestamp, level, service.name as service FROM Log WHERE service.name = 'api-gateway' AND level = 'error'",
+    "poll_interval_seconds": 3
+  },
+  "graphql": {
+    "endpoint": "http://localhost:4000/graphql",
+    "mutation_template": "mutation ReplayLogEvent($data: LogEventInput!) { replayLogEvent(data: $data) { id success processedAt } }"
+  },
+  "filters": {
+    "message_pattern": "^(ERROR|FATAL).*",
+    "required_fields": ["message", "timestamp", "service"]
+  },
+  "mapping": {
+    "message": "message",
+    "timestamp": "timestamp",
+    "level": "level",
+    "service": "service",
+    "metadata": "_original_log"
+  },
+  "extraction": {
+    "patterns": {
+      "user_id": "user_id=([0-9]+)",
+      "request_id": "request_id=([a-f0-9-]+)",
+      "error_code": "code:(\\w+)"
+    }
+  }
+}
