@@ -1,0 +1,77 @@
+{
+  "newRelic": {
+    "apiKey": "YOUR_NEW_RELIC_API_KEY",
+    "accountId": "YOUR_ACCOUNT_ID",
+    "pollingIntervalMs": 10000
+  },
+  "backend": {
+    "endpoint": "http://localhost:4000/graphql",
+    "headers": {
+      "Authorization": "Bearer YOUR_TOKEN"
+    }
+  },
+  "nrqlQuery": "SELECT * FROM Log WHERE service = 'my-service'",
+  "mappings": [
+    {
+      "name": "user-signup-event",
+      "filters": [
+        {
+          "field": "message",
+          "operator": "contains",
+          "value": "User signed up"
+        },
+        {
+          "field": "attributes.userId",
+          "operator": "exists"
+        }
+      ],
+      "mutation": "mutation CreateUser($userId: ID!, $email: String!, $name: String) {\n  createUser(userId: $userId, email: $email, name: $name) {\n    id\n    email\n  }\n}",
+      "extractors": [
+        {
+          "sourcePath": "attributes.userId",
+          "targetField": "userId"
+        },
+        {
+          "sourcePath": "attributes.email",
+          "targetField": "email",
+          "transform": "lowercase"
+        },
+        {
+          "sourcePath": "attributes.name",
+          "targetField": "name",
+          "defaultValue": "Unknown"
+        }
+      ]
+    },
+    {
+      "name": "order-placed-event",
+      "filters": [
+        {
+          "field": "message",
+          "operator": "regex",
+          "value": "Order.*placed"
+        },
+        {
+          "field": "attributes.orderId",
+          "operator": "exists"
+        }
+      ],
+      "mutation": "mutation CreateOrder($orderId: ID!, $userId: ID!, $total: Float!) {\n  createOrder(orderId: $orderId, userId: $userId, total: $total) {\n    id\n    total\n  }\n}",
+      "extractors": [
+        {
+          "sourcePath": "attributes.orderId",
+          "targetField": "orderId"
+        },
+        {
+          "sourcePath": "attributes.userId",
+          "targetField": "userId"
+        },
+        {
+          "sourcePath": "attributes.orderTotal",
+          "targetField": "total",
+          "transform": "parseFloat"
+        }
+      ]
+    }
+  ]
+}
